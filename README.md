@@ -28,3 +28,5 @@ An interaction system was created in this project. What does it include?
 
 Potential Problems:
 
+1. You may experience problems with a complex and multi-combination system; the system needs to be updated.
+2. Adding an input icon will require an update.
