@@ -23,17 +23,22 @@ public class PlayerMovement : MonoBehaviour
     [Header("Interaction Settings")]
     public float interactDistance = 300;
     float inputHoldTime;
+    bool holdingKey;
 
 
 
     float verticalRotation;
 
-    private void Start()
+
+
+    private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions.FindAction("Movement");
         cameraAction = playerInput.actions.FindAction("Camera");
         interactionAction = playerInput.actions.FindAction("Interaction");
+        interactionAction.started += OnInteractionStarted;
+        interactionAction.canceled += OnInteractionCanceled;
     }
 
 
@@ -41,7 +46,6 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
         CameraMovement();
-        Interaction();
     }
 
 
@@ -69,18 +73,56 @@ public class PlayerMovement : MonoBehaviour
 
     void Interaction()
     {
-        if(interactionAction.triggered)
+        if (interactionAction.triggered)
         {
-            Ray ray = new Ray(transform.position, transform.forward);
+            Debug.Log(inputHoldTime);
+            Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
             {
                 if (hit.collider.TryGetComponent<I_Interaction>(out var interactable))
                 {
-                    interactable.OnInteract();
+                    if(interactable != null)
+                    {
+                        if (interactable.IsInteractable)
+                        {
+                            if (interactable.HoldInteract)
+                            {
+                                inputHoldTime += Time.deltaTime;
+                                Debug.Log(inputHoldTime);
+                                if (inputHoldTime >= interactable.HoldDuration)
+                                {
+                                    interactable.OnInteract();
+                                }
+                            }
+                            else
+                            {
+                                interactable.OnInteract();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        inputHoldTime = 0;
+                    }
                 }
             }
         }
+    }
+
+
+    void OnInteractionStarted(InputAction.CallbackContext ctx)
+    {
+        inputHoldTime = 0;
+        holdingKey = true;
+
+        Interaction();
+    }
+
+    void OnInteractionCanceled(InputAction.CallbackContext ctx)
+    {
+        holdingKey = false;
+        inputHoldTime = 0;
     }
 
 

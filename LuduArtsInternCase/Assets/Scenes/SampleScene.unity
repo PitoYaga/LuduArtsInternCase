@@ -491,8 +491,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 725ba4cd49022e740b98aa5b34559e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 330585545}
   walkSpeed: 5
+  camera: {fileID: 330585545}
   lookSensivity: 2
   cameraClamp: 70
   interactDistance: 300
@@ -864,8 +864,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da4f7d17c5a9114b913e378bfb890f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdDuration: 0
-  holdInteract: 0
+  holdDuration: 2
+  holdInteract: 1
   multipleUse: 0
   isInteractable: 1
 --- !u!54 &1775717444
