@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     float verticalRotation;
+    InteractionUI interactionUI;
 
 
 
@@ -41,6 +42,11 @@ public class PlayerMovement : MonoBehaviour
         interactionAction.canceled += OnInteractionCanceled;
     }
 
+
+    private void Start()
+    {
+        interactionUI = GameObject.FindGameObjectWithTag("HUD").GetComponent<InteractionUI>();
+    }
 
     private void Update()
     {
@@ -91,10 +97,13 @@ public class PlayerMovement : MonoBehaviour
                       if (interactable.HoldInteract)
                       {
                            inputHoldTime += Time.deltaTime;
+                           interactionUI.UpdateHoldingBar(inputHoldTime / interactable.HoldDuration);
+
                            if (inputHoldTime >= interactable.HoldDuration)
                            {
                                 holdingKey = false;
                                 inputHoldTime = 0;
+                                interactionUI.ResetInteractionWindow();
                                 interactable.OnInteract();
                            }
                       }
@@ -102,6 +111,7 @@ public class PlayerMovement : MonoBehaviour
                       {
                            holdingKey = false;
                            inputHoldTime = 0;
+                           interactionUI.ResetInteractionWindow();
                            interactable.OnInteract();
                       }
                  }
@@ -125,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
     {
         holdingKey = false;
         inputHoldTime = 0;
+        interactionUI.UpdateHoldingBar(0);
     }
 
 

@@ -1273,7 +1273,7 @@ GameObject:
   - component: {fileID: 1223985463}
   m_Layer: 5
   m_Name: HUD
-  m_TagString: Untagged
+  m_TagString: HUD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1794,7 +1794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdDuration: 2
-  holdInteract: 0
+  holdInteract: 1
   multipleUse: 0
   isInteractable: 1
   interactionSound: {fileID: 0}
@@ -2141,8 +2141,8 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 347490392}
-  - {fileID: 405535635}
   - {fileID: 1223985462}
+  - {fileID: 405535635}
   - {fileID: 1029667910}
   - {fileID: 1775717448}
   - {fileID: 1713733776}

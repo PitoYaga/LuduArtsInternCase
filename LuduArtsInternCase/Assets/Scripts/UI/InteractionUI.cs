@@ -8,6 +8,12 @@ public class InteractionUI : MonoBehaviour
     public Image holdingBar;
     public TextMeshProUGUI interactionText;
 
+
+    private void Start()
+    {
+        ResetInteractionWindow();
+    }
+
     public void UpdateInteractionText(string newText)
     {
         interactionText.SetText(newText);
@@ -18,9 +24,9 @@ public class InteractionUI : MonoBehaviour
         holdingBar.fillAmount = percent;
     }
 
-    public void HideInteractionWindow()
+    public void ResetInteractionWindow()
     {
         holdingBar.fillAmount = 0;
-        interactionWindow.SetActive(false);
+        //interactionWindow.SetActive(false);
     }
 }
