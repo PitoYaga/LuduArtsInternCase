@@ -82,35 +82,34 @@ public class PlayerMovement : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
         {
-            if (hit.collider.TryGetComponent<I_Interaction>(out var interactable))
+            var interactable = hit.collider.GetComponentInParent<I_Interaction>();
+
+            if (interactable != null)
             {
-                if (interactable != null)
-                {
-                    if (interactable.IsInteractable)
-                    {
-                        if (interactable.HoldInteract)
-                        {
-                            inputHoldTime += Time.deltaTime;
-                            if (inputHoldTime >= interactable.HoldDuration)
-                            {
+                 if (interactable.IsInteractable)
+                 {
+                      if (interactable.HoldInteract)
+                      {
+                           inputHoldTime += Time.deltaTime;
+                           if (inputHoldTime >= interactable.HoldDuration)
+                           {
                                 holdingKey = false;
                                 inputHoldTime = 0;
                                 interactable.OnInteract();
-                            }
-                        }
-                        else
-                        {
-                            holdingKey = false;
-                            inputHoldTime = 0;
-                            interactable.OnInteract();
-                        }
-                    }
-                }
-                else
-                {
-                    holdingKey = false;
-                    inputHoldTime = 0;
-                }
+                           }
+                      }
+                      else
+                      {
+                           holdingKey = false;
+                           inputHoldTime = 0;
+                           interactable.OnInteract();
+                      }
+                 }
+            }
+            else
+            {
+                 holdingKey = false;
+                 inputHoldTime = 0;
             }
         }
     }

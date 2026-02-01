@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class InteractableBase : MonoBehaviour, I_Interaction
 {
     [Header("InteractableSettings")]
@@ -19,22 +20,12 @@ public class InteractableBase : MonoBehaviour, I_Interaction
 
     public bool IsInteractable => isInteractable;
 
-    public void OnInteract()
+    public virtual void OnInteract()
     {
        Debug.Log("Interacted");
     }
 
 
     //
-    
-    void Start()
-    {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
+   
 }
