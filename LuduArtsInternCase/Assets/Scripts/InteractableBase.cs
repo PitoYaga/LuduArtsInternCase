@@ -9,6 +9,7 @@ public class InteractableBase : MonoBehaviour, I_Interaction
     public bool multipleUse;
     public bool isInteractable;
     public string interactionText;
+    public bool grabableObject;
 
 
     // Interface
@@ -22,6 +23,8 @@ public class InteractableBase : MonoBehaviour, I_Interaction
     public bool IsInteractable => isInteractable;
 
     public string InteractionText => interactionText;
+
+    public bool GrabableObject => grabableObject;
 
     public virtual void OnInteract()
     {

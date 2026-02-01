@@ -767,6 +767,7 @@ MonoBehaviour:
   lookSensivity: 2
   cameraClamp: 70
   interactDistance: 300
+  handTransform: {fileID: 453562122}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,6 +933,7 @@ GameObject:
   - component: {fileID: 517039428}
   - component: {fileID: 517039427}
   - component: {fileID: 517039431}
+  - component: {fileID: 517039432}
   m_Layer: 0
   m_Name: Test_GrabableItem
   m_TagString: Untagged
@@ -1055,6 +1057,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &517039432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517039426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e22870aa5ed57045a23cc587499b459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdDuration: 0
+  holdInteract: 0
+  multipleUse: 0
+  isInteractable: 1
+  interactionText: Grab
+  grabableObject: 1
+  interactionSound: {fileID: 0}
+  interactionParticle: {fileID: 0}
+  particleEffectPivot: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1377,6 +1400,8 @@ MonoBehaviour:
   interactionWindow: {fileID: 2127549049}
   holdingBar: {fileID: 12641724}
   interactionText: {fileID: 395013285}
+  crosshairDefault: {fileID: 1007698716}
+  crosshairHover: {fileID: 1444813539}
 --- !u!1 &1323132099
 GameObject:
   m_ObjectHideFlags: 0
@@ -1431,7 +1456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1444813538
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1755,6 +1780,7 @@ MonoBehaviour:
   multipleUse: 0
   isInteractable: 1
   interactionText: Interact
+  grabableObject: 0
   interactionSound: {fileID: 0}
   interactionParticle: {fileID: 0}
   particleEffectPivot: {fileID: 0}
@@ -1799,6 +1825,7 @@ MonoBehaviour:
   multipleUse: 0
   isInteractable: 1
   interactionText: Hold to interact
+  grabableObject: 0
   interactionSound: {fileID: 0}
   interactionParticle: {fileID: 0}
   particleEffectPivot: {fileID: 0}

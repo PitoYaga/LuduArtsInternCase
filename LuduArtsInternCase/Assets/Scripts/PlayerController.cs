@@ -19,15 +19,16 @@ public class PlayerMovement : MonoBehaviour
     public Camera camera;
     public float lookSensivity = 5;
     public float cameraClamp = 70;
+    float verticalRotation;
 
     [Header("Interaction Settings")]
     public float interactDistance = 300;
+    public Transform handTransform;
     float inputHoldTime;
     bool holdingKey;
+    GameObject grabbedItem;
+    GameObject rayHitItem;
 
-
-
-    float verticalRotation;
     InteractionUI interactionUI;
 
 
@@ -87,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
         {
             var interactable = hit.collider.GetComponentInParent<I_Interaction>();
+            rayHitItem = hit.collider.gameObject;
 
             if(holdingKey)
             {
@@ -115,29 +117,29 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             interactionUI.ResetInteractionWindow();
+            rayHitItem = null;
         }
     }
 
 
-    void InteractionAction(I_Interaction interactedItem)
+    void InteractionAction(I_Interaction interactable)
     {
-        if (interactedItem != null)
+        if (interactable != null)
         {
-            if (interactedItem.IsInteractable)
+            if (interactable.IsInteractable)
             {
-                
-
-                if (interactedItem.HoldInteract)
+                if (interactable.HoldInteract)
                 {
                     inputHoldTime += Time.deltaTime;
-                    interactionUI.UpdateHoldingBar(inputHoldTime / interactedItem.HoldDuration);
+                    interactionUI.UpdateHoldingBar(inputHoldTime / interactable.HoldDuration);
 
-                    if (inputHoldTime >= interactedItem.HoldDuration)
+                    if (inputHoldTime >= interactable.HoldDuration)
                     {
                         holdingKey = false;
                         inputHoldTime = 0;
                         interactionUI.UpdateHoldingBar(0);
-                        interactedItem.OnInteract();
+                        interactable.OnInteract();
+                        GrabItemToHand(interactable);
                     }
                 }
                 else
@@ -145,7 +147,8 @@ public class PlayerMovement : MonoBehaviour
                     holdingKey = false;
                     inputHoldTime = 0;
                     //interactionUI.ResetInteractionWindow();
-                    interactedItem.OnInteract();
+                    interactable.OnInteract();
+                    GrabItemToHand(interactable);
                 }
             }
         }
@@ -159,6 +162,13 @@ public class PlayerMovement : MonoBehaviour
 
     void OnInteractionStarted(InputAction.CallbackContext ctx)
     {
+        if(grabbedItem != null)
+        {
+            var interactable = grabbedItem.GetComponentInParent<I_Interaction>();
+            interactable.OnInteract();
+            grabbedItem = null;
+        }
+
         inputHoldTime = 0;
         holdingKey = true;
     }
@@ -168,6 +178,18 @@ public class PlayerMovement : MonoBehaviour
         holdingKey = false;
         inputHoldTime = 0;
         interactionUI.UpdateHoldingBar(0);
+    }
+
+
+    void GrabItemToHand(I_Interaction interactable)
+    {
+        if (interactable.GrabableObject)
+        {
+            grabbedItem = rayHitItem;
+            grabbedItem.transform.SetParent(handTransform);
+            grabbedItem.transform.localPosition = Vector3.zero;
+            grabbedItem.transform.localRotation = Quaternion.identity;
+        }
     }
 
 
