@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     bool holdingKey;
     GameObject grabbedItem;
     GameObject rayHitItem;
+    bool interactionCompleted;
 
     InteractionUI interactionUI;
 
@@ -90,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
             var interactable = hit.collider.GetComponentInParent<I_Interaction>();
             rayHitItem = hit.collider.gameObject;
 
-            if(holdingKey)
+            if(holdingKey && !interactionCompleted)
             {
                 InteractionAction(interactable);
             }
@@ -135,20 +136,64 @@ public class PlayerMovement : MonoBehaviour
 
                     if (inputHoldTime >= interactable.HoldDuration)
                     {
+                        interactionCompleted = true;
                         holdingKey = false;
                         inputHoldTime = 0;
                         interactionUI.UpdateHoldingBar(0);
-                        interactable.OnInteract();
-                        GrabItemToHand(interactable);
+
+                        switch (interactable.InteractionType)
+                        {
+                            case ItemInteractionTypes.None:
+                                break;
+                            case ItemInteractionTypes.Interact:
+                                interactable.OnInteract();
+                                break;
+                            case ItemInteractionTypes.Grab:
+                                interactable.OnInteract();
+                                AttachItemToHand(interactable);
+                                break;
+                            case ItemInteractionTypes.Combine:
+                                if (grabbedItem != null)
+                                {
+                                    interactable.InteractedObject = grabbedItem;
+                                    DropItemFromHand();
+                                    interactable.OnInteract();
+                                }
+                                break;
+                        }
+                        
+                        
+                        
+                        
                     }
                 }
                 else
                 {
-                    holdingKey = false;
-                    inputHoldTime = 0;
-                    //interactionUI.ResetInteractionWindow();
-                    interactable.OnInteract();
-                    GrabItemToHand(interactable);
+                    interactionCompleted = true;
+                    switch (interactable.InteractionType)
+                    {
+                        case ItemInteractionTypes.None:
+                            break;
+
+                        case ItemInteractionTypes.Interact:
+                            interactable.OnInteract();
+                            break;
+
+                        case ItemInteractionTypes.Grab:
+                            interactable.OnInteract();
+                            AttachItemToHand(interactable);
+                            break;
+
+                        case ItemInteractionTypes.Combine:
+                            Debug.Log(grabbedItem == null);
+                            if (grabbedItem != null)
+                            {
+                                interactable.InteractedObject = grabbedItem;
+                                DropItemFromHand();
+                                interactable.OnInteract();
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -160,36 +205,60 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void OnInteractionStarted(InputAction.CallbackContext ctx)
+    void OnInteractionStarted(InputAction.CallbackContext ctx) // Interaction input pressed
     {
-        if(grabbedItem != null)
+        interactionCompleted = false;
+        inputHoldTime = 0;
+        holdingKey = true;
+
+        if(rayHitItem != null)
+        {
+            if (grabbedItem != null && rayHitItem.GetComponentInParent<I_Interaction>().InteractionType != ItemInteractionTypes.Combine)
+            {
+                DropItemFromHand();
+            }
+        }
+        else
+        {
+            if (grabbedItem != null)
+            {
+                DropItemFromHand();
+            }
+        }
+       
+    }
+
+    void OnInteractionCanceled(InputAction.CallbackContext ctx) // Interaction input released
+    {
+        holdingKey = false;
+        inputHoldTime = 0;
+        interactionUI.UpdateHoldingBar(0);
+        interactionCompleted = true;
+    }
+
+    void AttachItemToHand(I_Interaction interactable) // Pickup item to hand
+    {
+        if(rayHitItem != null)
+        {
+            if (interactable.GrabableObject)
+            {
+                grabbedItem = rayHitItem;
+                grabbedItem.transform.SetParent(handTransform);
+                grabbedItem.transform.localPosition = Vector3.zero;
+                grabbedItem.transform.localRotation = Quaternion.identity;
+            }
+        }
+    }
+
+    void DropItemFromHand() // Drop current item
+    {
+        if (grabbedItem != null)
         {
             var interactable = grabbedItem.GetComponentInParent<I_Interaction>();
             interactable.OnInteract();
             grabbedItem = null;
         }
-
-        inputHoldTime = 0;
-        holdingKey = true;
-    }
-
-    void OnInteractionCanceled(InputAction.CallbackContext ctx)
-    {
-        holdingKey = false;
-        inputHoldTime = 0;
-        interactionUI.UpdateHoldingBar(0);
-    }
-
-
-    void GrabItemToHand(I_Interaction interactable)
-    {
-        if (interactable.GrabableObject)
-        {
-            grabbedItem = rayHitItem;
-            grabbedItem.transform.SetParent(handTransform);
-            grabbedItem.transform.localPosition = Vector3.zero;
-            grabbedItem.transform.localRotation = Quaternion.identity;
-        }
+        
     }
 
 

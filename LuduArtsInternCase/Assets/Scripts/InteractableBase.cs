@@ -4,12 +4,15 @@ using UnityEngine;
 public class InteractableBase : MonoBehaviour, I_Interaction
 {
     [Header("Interactable Settings")]
+    public ItemInteractionTypes interactionType;
     public float holdDuration;
     public bool holdInteract;
     public bool multipleUse;
     public bool isInteractable;
     public string interactionText;
     public bool grabableObject;
+    public GameObject interactedObject;
+    public ItemTypes itemType;
 
 
     // Interface
@@ -26,9 +29,15 @@ public class InteractableBase : MonoBehaviour, I_Interaction
 
     public bool GrabableObject => grabableObject;
 
+    public ItemTypes ItemType => itemType;
+
+    public ItemInteractionTypes InteractionType => interactionType;
+
+    GameObject I_Interaction.InteractedObject { get => interactedObject; set => interactedObject = value; }
+
     public virtual void OnInteract()
     {
-       Debug.Log("Interacted");
+        //Debug.Log("Interacted");
         if(audioSource != null && interactionSound != null)
         {
             audioSource.PlayOneShot(interactionSound);
@@ -47,6 +56,8 @@ public class InteractableBase : MonoBehaviour, I_Interaction
     public AudioClip interactionSound;
     public ParticleSystem interactionParticle;
     public Transform particleEffectPivot;
+
+    
 
 
     //Components
