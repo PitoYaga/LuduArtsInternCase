@@ -12,13 +12,17 @@ public class PlaceItem : InteractableBase
 
     public override void OnInteract()
     {
-        base.OnInteract();
-        interactedObject.GetComponentInParent<I_Interaction>().OnInteract();
-        interactedObject.transform.SetParent(itemAttachTransform);
-        interactedObject.transform.localPosition = Vector3.zero;
-        interactedObject.transform.localRotation = Quaternion.identity;
-        StartCoroutine(ChangeItem());
-        isInteractable = false;
+        if(interactedObject.GetComponentInParent<I_Interaction>().ItemType == targetItemType)
+        {
+            base.OnInteract();
+            interactedObject.GetComponentInParent<I_Interaction>().OnInteract();
+            interactedObject.transform.SetParent(itemAttachTransform);
+            interactedObject.transform.localPosition = Vector3.zero;
+            interactedObject.transform.localRotation = Quaternion.identity;
+            StartCoroutine(ChangeItem());
+            isInteractable = false;
+        }
+      
     }
 
     IEnumerator ChangeItem()

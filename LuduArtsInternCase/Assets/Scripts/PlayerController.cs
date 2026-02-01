@@ -159,6 +159,10 @@ public class PlayerMovement : MonoBehaviour
                                     DropItemFromHand();
                                     interactable.OnInteract();
                                 }
+                                else
+                                {
+                                    interactionUI.ShowWarningText("You Don't Have An Item");
+                                }
                                 break;
                         }
                         
@@ -191,6 +195,10 @@ public class PlayerMovement : MonoBehaviour
                                 interactable.InteractedObject = grabbedItem;
                                 DropItemFromHand();
                                 interactable.OnInteract();
+                            }
+                            else
+                            {
+                                interactionUI.ShowWarningText("You Don't Have An Item");
                             }
                             break;
                     }

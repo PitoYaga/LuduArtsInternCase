@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class InteractionUI : MonoBehaviour
     public GameObject interactionWindow;
     public Image holdingBar;
     public TextMeshProUGUI interactionText;
+    public TextMeshProUGUI warningText;
     public Image crosshairDefault;
     public Image crosshairHover;
 
@@ -15,6 +17,8 @@ public class InteractionUI : MonoBehaviour
     private void Start()
     {
         ResetInteractionWindow();
+        warningText.text = "";
+        warningText.enabled = false;
     }
 
     public void UpdateInteractionText(string newText)
@@ -41,5 +45,19 @@ public class InteractionUI : MonoBehaviour
         interactionText.SetText("");
         crosshairDefault.enabled = true;
         crosshairHover.enabled = false;
+    }
+
+
+    public void ShowWarningText(string text) 
+    {
+        StartCoroutine(ToggleWarningText(text));
+    }
+
+    IEnumerator ToggleWarningText(string text)
+    {
+        warningText.text = text;
+        warningText.enabled = true;
+        yield return new WaitForSeconds(2);
+        warningText.enabled = false;
     }
 }
