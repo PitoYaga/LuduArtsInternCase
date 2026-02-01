@@ -52,10 +52,8 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
         CameraMovement();
-        if (holdingKey)
-        {
-            Interaction();
-        }
+        InteractionRay();
+        
     }
 
 
@@ -81,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void Interaction()
+    void InteractionRay()
     {
         //Debug.Log("Interaction Ray");
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
@@ -90,37 +88,71 @@ public class PlayerMovement : MonoBehaviour
         {
             var interactable = hit.collider.GetComponentInParent<I_Interaction>();
 
-            if (interactable != null)
+            if(holdingKey)
             {
-                 if (interactable.IsInteractable)
-                 {
-                      if (interactable.HoldInteract)
-                      {
-                           inputHoldTime += Time.deltaTime;
-                           interactionUI.UpdateHoldingBar(inputHoldTime / interactable.HoldDuration);
-
-                           if (inputHoldTime >= interactable.HoldDuration)
-                           {
-                                holdingKey = false;
-                                inputHoldTime = 0;
-                                interactionUI.ResetInteractionWindow();
-                                interactable.OnInteract();
-                           }
-                      }
-                      else
-                      {
-                           holdingKey = false;
-                           inputHoldTime = 0;
-                           interactionUI.ResetInteractionWindow();
-                           interactable.OnInteract();
-                      }
-                 }
+                InteractionAction(interactable);
             }
             else
             {
-                 holdingKey = false;
-                 inputHoldTime = 0;
+                if (interactable != null) 
+                {
+                    if (interactable.IsInteractable)
+                    {
+                        interactionUI.UpdateInteractionText(interactable.InteractionText);
+                        interactionUI.ShorHoverCrosshair();
+                    }
+                    else
+                    {
+                        interactionUI.ResetInteractionWindow();
+                    }
+                }
+                else
+                {
+                    interactionUI.ResetInteractionWindow();
+                }
             }
+        }
+        else
+        {
+            interactionUI.ResetInteractionWindow();
+        }
+    }
+
+
+    void InteractionAction(I_Interaction interactedItem)
+    {
+        if (interactedItem != null)
+        {
+            if (interactedItem.IsInteractable)
+            {
+                
+
+                if (interactedItem.HoldInteract)
+                {
+                    inputHoldTime += Time.deltaTime;
+                    interactionUI.UpdateHoldingBar(inputHoldTime / interactedItem.HoldDuration);
+
+                    if (inputHoldTime >= interactedItem.HoldDuration)
+                    {
+                        holdingKey = false;
+                        inputHoldTime = 0;
+                        interactionUI.UpdateHoldingBar(0);
+                        interactedItem.OnInteract();
+                    }
+                }
+                else
+                {
+                    holdingKey = false;
+                    inputHoldTime = 0;
+                    //interactionUI.ResetInteractionWindow();
+                    interactedItem.OnInteract();
+                }
+            }
+        }
+        else
+        {
+            holdingKey = false;
+            inputHoldTime = 0;
         }
     }
 

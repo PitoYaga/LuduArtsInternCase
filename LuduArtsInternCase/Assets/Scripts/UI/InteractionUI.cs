@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class InteractionUI : MonoBehaviour
     public GameObject interactionWindow;
     public Image holdingBar;
     public TextMeshProUGUI interactionText;
+    public Image crosshairDefault;
+    public Image crosshairHover;
 
 
     private void Start()
@@ -24,9 +27,19 @@ public class InteractionUI : MonoBehaviour
         holdingBar.fillAmount = percent;
     }
 
+
+    public void ShorHoverCrosshair()
+    {
+        crosshairDefault.enabled = false;
+        crosshairHover.enabled = true;
+    }
+
+
     public void ResetInteractionWindow()
     {
         holdingBar.fillAmount = 0;
-        //interactionWindow.SetActive(false);
+        interactionText.SetText("");
+        crosshairDefault.enabled = true;
+        crosshairHover.enabled = false;
     }
 }

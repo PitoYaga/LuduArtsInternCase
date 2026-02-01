@@ -28,6 +28,12 @@ public class Door : InteractableBase
     }
 
 
+    private void Start()
+    {
+        interactionText = isOpen ? "Close" : "Open";
+    }
+
+
     public override void OnInteract()
     {
         base.OnInteract();
@@ -40,6 +46,7 @@ public class Door : InteractableBase
         isOpen = !isOpen;
         StopAllCoroutines();
         StartCoroutine(RotateDoor());
+        interactionText = isOpen ? "Close" : "Open";
     }
 
 
