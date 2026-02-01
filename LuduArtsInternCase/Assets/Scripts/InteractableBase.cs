@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class InteractableBase : MonoBehaviour, I_Interaction
 {
-    [Header("InteractableSettings")]
+    [Header("Interactable Settings")]
     public float holdDuration;
     public bool holdInteract;
     public bool multipleUse;
     public bool isInteractable;
 
-    
+
     // Interface
 
     public float HoldDuration => holdDuration;
@@ -23,9 +23,33 @@ public class InteractableBase : MonoBehaviour, I_Interaction
     public virtual void OnInteract()
     {
        Debug.Log("Interacted");
+        if(audioSource != null && interactionSound != null)
+        {
+            audioSource.PlayOneShot(interactionSound);
+        }
+        if (interactionParticle != null)
+        {
+            Instantiate(interactionParticle, particleEffectPivot? particleEffectPivot.position : transform.position , Quaternion.identity);
+        }
     }
 
 
     //
-   
+
+
+    [Header("Interaction Effects")]
+    public AudioClip interactionSound;
+    public ParticleSystem interactionParticle;
+    public Transform particleEffectPivot;
+
+
+    //Components
+    AudioSource audioSource;
+
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
 }
